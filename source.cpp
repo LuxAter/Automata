@@ -17,7 +17,7 @@ int main(int argc, const char *argv[]) {
   dfa.AddTransitions("p", '1', "p");
   dfa.AddTransitions("p", '1', "q");
 
-  // std::vector<std::string> strings = {"1"};
+  // std::vector<std::string> strings = {"11"};
   std::vector<std::string> strings = {
       "1",    "10",   "11",   "100",  "101",  "110",  "111",  "1000",
       "1001", "1010", "1011", "1100", "1101", "1110", "1111", "10000"};
