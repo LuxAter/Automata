@@ -5,7 +5,9 @@
 #define AUTOMATA_VERSION_MINOR 0
 #define AUTOMATA_VERSION_PATCH 1
 
-namespace automata{
+namespace automata {
+
+  enum AutomatonTypes { NONE, DFA, PDA, LBA, TM };
   void InitAutomata();
   void TermAutomata();
   void GetVersion(int& major, int& minor, int& patch);
