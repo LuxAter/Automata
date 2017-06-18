@@ -7,7 +7,7 @@ namespace automata {
    public:
     bool Run(std::string str);
     bool SubRun(std::vector<char> tape, int current_state);
-    std::string TransitionStr(std::array<int, 3> trans);
+    std::string TransString(int trans);
     int Type();
 
    private:

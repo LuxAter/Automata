@@ -47,6 +47,9 @@ namespace automata {
     int State(std::string stat);
     int Language(char ch);
 
+    void SaveAutomaton(std::string file);
+    void LoadAutomaton(std::string file);
+
     virtual int Type();
 
    protected:

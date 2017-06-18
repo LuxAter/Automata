@@ -8,6 +8,22 @@ int main(int argc, const char *argv[]) {
   InitAutomata();
   Dfa dfa;
 
+  // dfa.LoadAutomaton("mot.dfa");
+
+  /*dfa.SetName("Multiple of 3");
+  dfa.SetStates(std::vector<std::string>{"s0", "s1", "s2"});
+  dfa.SetAccepting("s0");
+  dfa.SetStartState("s0");
+  dfa.SetLanguage(std::vector<char>{'0', '1'});
+
+  dfa.AddTransitions("s0", '0', "s0");
+  dfa.AddTransitions("s0", '1', "s1");
+  dfa.AddTransitions("s1", '0', "s2");
+  dfa.AddTransitions("s1", '1', "s0");
+  dfa.AddTransitions("s2", '0', "s1");
+  dfa.AddTransitions("s2", '1', "s2");
+  */
+  // dfa.SaveAutomaton("mot.dfa");
   dfa.SetStates(std::vector<std::string>{"p", "q"});
   dfa.SetAccepting("q");
   dfa.SetStartState("p");
