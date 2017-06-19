@@ -9,8 +9,8 @@ bool automata::Dfa::Run(std::string str) {
   int state = 0;
   std::vector<char> tape(str.c_str(), str.c_str() + str.length() + 1);
   if (tape.size() > 1) {
-    std::vector<std::array<int, 3>> choices =
-        GetTransitions(std::array<int, 2>{current_state, Language(tape[0])});
+    std::vector<std::array<int, 5>> choices = GetTransitions(
+        std::array<int, 5>{current_state, Language(tape[0]), -2, -2, -2});
     for (int j = 0; j < choices.size() && state != 1; j++) {
       current_state = choices[j][2];
       state = SubRun(std::vector<char>(tape.begin() + 1, tape.end()),
@@ -35,8 +35,8 @@ bool automata::Dfa::Run(std::string str) {
 bool automata::Dfa::SubRun(std::vector<char> tape, int current_state) {
   int state = 0;
   if (tape.size() > 1) {
-    std::vector<std::array<int, 3>> choices =
-        GetTransitions(std::array<int, 2>{current_state, Language(tape[0])});
+    std::vector<std::array<int, 5>> choices = GetTransitions(
+        std::array<int, 5>{current_state, Language(tape[0]), -2, -2, -2});
     for (int j = 0; j < choices.size() && state != 1; j++) {
       current_state = choices[j][2];
       state = SubRun(std::vector<char>(tape.begin() + 1, tape.end()),

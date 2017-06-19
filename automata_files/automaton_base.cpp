@@ -58,6 +58,34 @@ void automata::Automaton::AddLanguage(std::string lang) {
   language.insert(language.end(), lang_vec.begin(), lang_vec.end());
 }
 
+void automata::Automaton::SetAlphabet(char alpha) {
+  alphabet.clear();
+  alphabet = {alpha};
+}
+
+void automata::Automaton::SetAlphabet(std::vector<char> alpha) {
+  alphabet.clear();
+  alphabet = alpha;
+}
+
+void automata::Automaton::SetAlphabet(std::string alpha) {
+  alphabet.clear();
+  alphabet =
+      std::vector<char>(alpha.c_str(), alpha.c_str() + alpha.length() + 1);
+}
+
+void automata::Automaton::AddAlphabet(char alpha) { alphabet.push_back(alpha); }
+
+void automata::Automaton::AddAlphabet(std::vector<char> alpha) {
+  alphabet.insert(alphabet.end(), alpha.begin(), alpha.end());
+}
+
+void automata::Automaton::AddAlphabet(std::string alpha) {
+  std::vector<char> alpha_vec(alpha.c_str(),
+                              alpha.c_str() + alpha.length() + 1);
+  alphabet.insert(alphabet.end(), alpha_vec.begin(), alpha_vec.end());
+}
+
 void automata::Automaton::SetStates(std::string stat) {
   states.clear();
   states = {stat};
@@ -150,12 +178,12 @@ bool automata::Automaton::IsAccept(int stat) {
 }
 
 void automata::Automaton::SetTransitions(
-    std::vector<std::array<int, 3>> trans) {
+    std::vector<std::array<int, 5>> trans) {
   transitions.clear();
   transitions = trans;
 }
 
-void automata::Automaton::AddTransitions(std::array<int, 3> trans) {
+void automata::Automaton::AddTransitions(std::array<int, 5> trans) {
   transitions.push_back(trans);
 }
 
@@ -163,20 +191,39 @@ void automata::Automaton::AddTransitions(std::string state_a, char ch,
                                          std::string state_b) {
   if (this->Type() != DFA && this->Type() != NONE) {
     pessum::Log(pessum::WARNING,
-                "Transtions for this automaton requier different parameters",
+                "Transtions for this automaton require different parameters",
                 "automata::Automaton::AddTransitions");
   } else {
     transitions.push_back(
-        std::array<int, 3>{State(state_a), Language(ch), State(state_b)});
+        std::array<int, 5>{State(state_a), Language(ch), State(state_b), 0, 0});
   }
 }
 
-std::vector<std::array<int, 3>> automata::Automaton::GetTransitions(
-    std::array<int, 2> match) {
-  std::vector<std::array<int, 3>> matched;
+void automata::Automaton::AddTransitions(std::string state_a, char ch, char pop,
+                                         char push, std::string state_b) {
+  if (this->Type() != PDA && this->Type() != NONE) {
+    pessum::Log(pessum::WARNING,
+                "Transitions for this automaton require different parameters",
+                "automata::Automaton::AddTransitions");
+  } else {
+    transitions.push_back(std::array<int, 5>{State(state_a), Language(ch),
+                                             Alphabet(pop), Alphabet(push),
+                                             State(state_b)});
+  }
+}
+
+std::vector<std::array<int, 5>> automata::Automaton::GetTransitions(
+    std::array<int, 5> match) {
+  std::vector<std::array<int, 5>> matched;
   for (int i = 0; i < transitions.size(); i++) {
-    if (transitions[i][0] == match[0] &&
-        (transitions[i][1] == match[1] || transitions[i][1] == -1)) {
+    bool good = true;
+    for (int j = 0; j < 5 && good == true; j++) {
+      if ((match[j] != -2 && transitions[i][j] != -1) &&
+          match[j] != transitions[i][j]) {
+        good = false;
+      }
+    }
+    if (good == true) {
       matched.push_back(transitions[i]);
     }
   }
@@ -208,6 +255,20 @@ int automata::Automaton::Language(char ch) {
   return (0);
 }
 
+int automata::Automaton::Alphabet(char ch) {
+  for (int i = 0; i < alphabet.size(); i++) {
+    if (alphabet[i] == ch) {
+      return (i);
+    }
+  }
+  if (ch == '\e') {
+    return (-1);
+  }
+  pessum::Log(pessum::WARNING, "Alphabet does not contain %c",
+              "automata::Automaton::Alphabet", ch);
+  return (0);
+}
+
 void automata::Automaton::SaveAutomaton(std::string file) {
   std::ofstream out(file.c_str());
   if (out.is_open()) {
@@ -226,7 +287,7 @@ void automata::Automaton::SaveAutomaton(std::string file) {
     }
     out << "\n";
     for (int i = 0; i < transitions.size(); i++) {
-      for (int j = 0; j < 3; j++) {
+      for (int j = 0; j < 5; j++) {
         out << transitions[i][j] << " ";
       }
       out << "\n";
@@ -282,7 +343,7 @@ void automata::Automaton::LoadAutomaton(std::string file) {
         }
         stage = 5;
       } else if (stage == 5) {
-        std::array<int, 3> trans;
+        std::array<int, 5> trans;
         int index = 0;
         std::string sub_string = "";
         for (int i = 0; i < line.size(); i++) {
