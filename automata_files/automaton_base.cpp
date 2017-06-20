@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include "automata.hpp"
+#include "chars.hpp"
 
 automata::Automaton::Automaton() { name = "automaton"; }
 
@@ -199,15 +200,20 @@ void automata::Automaton::AddTransitions(std::string state_a, char ch,
   }
 }
 
-void automata::Automaton::AddTransitions(std::string state_a, char ch, char pop,
-                                         char push, std::string state_b) {
-  if (this->Type() != PDA && this->Type() != NONE) {
+void automata::Automaton::AddTransitions(std::string state_a, char ch_a,
+                                         char ch_b, char ch_c,
+                                         std::string state_b) {
+  if (this->Type() != PDA && this->Type() != NONE && this->Type() != TM) {
     pessum::Log(pessum::WARNING,
                 "Transitions for this automaton require different parameters",
                 "automata::Automaton::AddTransitions");
-  } else {
-    transitions.push_back(std::array<int, 5>{State(state_a), Language(ch),
-                                             Alphabet(pop), Alphabet(push),
+  } else if (this->Type() == PDA) {
+    transitions.push_back(std::array<int, 5>{State(state_a), Language(ch_a),
+                                             Alphabet(ch_b), Alphabet(ch_c),
+                                             State(state_b)});
+  } else if (this->Type() == TM) {
+    transitions.push_back(std::array<int, 5>{State(state_a), Language(ch_a),
+                                             Alphabet(ch_b), Move(ch_c),
                                              State(state_b)});
   }
 }
@@ -261,12 +267,84 @@ int automata::Automaton::Alphabet(char ch) {
       return (i);
     }
   }
+  if (this->Type() == TM) {
+    for (int i = 0; i < language.size(); i++) {
+      if (language[i] == ch) {
+        return (i + alphabet.size());
+      }
+    }
+  }
   if (ch == '\e') {
     return (-1);
   }
   pessum::Log(pessum::WARNING, "Alphabet does not contain %c",
               "automata::Automaton::Alphabet", ch);
   return (0);
+}
+
+int automata::Automaton::Move(char ch) {
+  if (ch == 'R' || ch == 'r' || ch == 'D' || ch == 'd') {
+    return (1);
+  } else if (ch == 'L' || ch == 'l' || ch == 'U' || ch == 'u') {
+    return (2);
+  } else if (ch == 'S' || ch == 's') {
+    return (3);
+  }
+  return (0);
+}
+
+std::string automata::Automaton::StrState(int state) {
+  if (state >= 0 && state < states.size()) {
+    return (states[state]);
+  } else if (state < 0) {
+    return (char_map['\e']);
+  } else {
+    return ("null");
+  }
+}
+
+std::string automata::Automaton::StrLanguage(int lang) {
+  if (lang >= 0 && lang < language.size()) {
+    if (char_map.find(language[lang]) != char_map.end()) {
+      return (char_map[language[lang]]);
+    } else {
+      return (std::string(1, language[lang]));
+    }
+  } else if (lang < 0) {
+    return (char_map['\e']);
+  } else if (lang >= language.size()) {
+    return (StrAlphabet(lang - language.size()));
+  } else {
+    return ("null");
+  }
+}
+
+std::string automata::Automaton::StrAlphabet(int alpha) {
+  if (alpha >= 0 && alpha < alphabet.size()) {
+    if (char_map.find(alphabet[alpha]) != char_map.end()) {
+      return (char_map[alphabet[alpha]]);
+    } else {
+      return (std::string(1, alphabet[alpha]));
+    }
+  } else if (alpha < 0) {
+    return (char_map['\e']);
+  } else if (alpha >= alphabet.size()) {
+    return (StrLanguage(alpha - alphabet.size()));
+  } else {
+    return ("null");
+  }
+}
+
+std::string automata::Automaton::StrMove(int move) {
+  if (move == 1) {
+    return ("R");
+  } else if (move == 2) {
+    return ("L");
+  } else if (move == 3) {
+    return ("S");
+  } else {
+    return ("null");
+  }
 }
 
 void automata::Automaton::SaveAutomaton(std::string file) {

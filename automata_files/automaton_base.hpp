@@ -56,6 +56,12 @@ namespace automata {
     int State(std::string stat);
     int Language(char ch);
     int Alphabet(char ch);
+    int Move(char ch);
+
+    std::string StrState(int state);
+    std::string StrLanguage(int lang);
+    std::string StrAlphabet(int alpha);
+    std::string StrMove(int move);
 
     void SaveAutomaton(std::string file);
     void LoadAutomaton(std::string file);
