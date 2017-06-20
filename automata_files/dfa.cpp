@@ -59,10 +59,12 @@ bool automata::Dfa::SubRun(std::vector<char> tape, int current_state) {
 }
 
 std::string automata::Dfa::TransString(int trans) {
-  std::string out = states[transitions[trans][0]] + "," +
-                    language[transitions[trans][1]] + "->" +
-                    states[transitions[trans][2]];
-  return (out);
+  return (TransString(transitions[trans]));
+}
+
+std::string automata::Dfa::TransString(std::array<int, 5> trans){
+  std::string out = StrState(trans[0]) + "," + StrLanguage(trans[1]) + "->" + StrState(trans[2]);
+  return(out);
 }
 
 int automata::Dfa::Type() { return (DFA); }

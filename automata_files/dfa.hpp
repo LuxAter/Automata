@@ -8,6 +8,7 @@ namespace automata {
     bool Run(std::string str);
     bool SubRun(std::vector<char> tape, int current_state);
     std::string TransString(int trans);
+    std::string TransString(std::array<int, 5> trans);
     int Type();
 
    private:

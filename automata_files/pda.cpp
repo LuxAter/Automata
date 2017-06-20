@@ -106,43 +106,10 @@ bool automata::Pda::SubRun(std::vector<char> tape, std::stack<int> p_stack,
 }
 
 std::string automata::Pda::TransString(int trans) {
-  std::string out =
-      states[transitions[trans][0]] + "," + language[transitions[trans][1]] +
-      " " + alphabet[transitions[trans][2]] + "/" +
-      alphabet[transitions[trans][3]] + "->" + states[transitions[trans][4]];
-  return (out);
+  return (TransString(transitions[trans]));
 }
 std::string automata::Pda::TransString(std::array<int, 5> trans) {
-  std::string out;
-  if (trans[0] != -1) {
-    out += states[trans[0]];
-  } else {
-    out += "\u03B5";
-  }
-  out += ",";
-  if (trans[1] != -1) {
-    out += language[trans[1]];
-  } else {
-    out += "\u03B5";
-  }
-  out += " ";
-  if (trans[2] != -1) {
-    out += alphabet[trans[2]];
-  } else {
-    out += "\u03B5";
-  }
-  out += "/";
-  if (trans[3] != -1) {
-    out += alphabet[trans[3]];
-  } else {
-    out += "\u03B5";
-  }
-  out += "->";
-  if (trans[4] != -1) {
-    out += states[trans[4]];
-  } else {
-    out += "\u03B5";
-  }
+  std::string out = StrState(trans[0]) + "," + StrLanguage(trans[1]) + " " + StrAlphabet(trans[2]) + "/" + StrAlphabet(trans[3]) + "->" + StrState(trans[4]);
   return (out);
 }
 
