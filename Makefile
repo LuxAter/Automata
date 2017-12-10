@@ -13,13 +13,10 @@ export INCLUDE_DIR= include
 
 export BASE_PATH=$(shell pwd)
 
-export COMPILER=g++
-export CXXFLAGS= -MMD -std=c++11 -w -c
+export COMPILER=clang++
+export CXXFLAGS= -MMD -std=c++14 -w -c
 
 export INSTALL_PATH=/usr/local
-
-export GCOV_LINK = -lgcov --coverage
-export GCOV_FLAG = -fprofile-arcs -ftest-coverage
 
 export COMMON_INCLUDE=-I$(BASE_PATH)/$(INCLUDE_DIR) $(INCLUDE)
 
