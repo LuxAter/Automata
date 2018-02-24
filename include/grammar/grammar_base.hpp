@@ -22,15 +22,27 @@
 #include <string>
 #include <set>
 
+#include "production_rule.hpp"
+
 namespace automata {
   namespace grammar {
     class Grammar{
       public:
+        Grammar();
+        Grammar(const Grammar& clone);
+        ~Grammar();
+
+        void SetTerminals(std::set<std::string> terminals);
+        void SetNonTerminals(std::set<std::string> non_terminals);
+        void SetProductionRules(std::set<ProductionRule> rules);
       protected:
         std::set<std::string> terminals_;
         std::set<std::string> non_terminals_;
+        std::set<ProductionRule> production_rules_;
       private:
     };
+
+    std::ostream& operator<<(std::ostream& out, const Grammar& lhs);
   } // namespace grammar
 } // namespace automata
 

@@ -32,6 +32,7 @@ namespace automata {
                      std::vector<std::string> tail,
                      std::vector<std::string> result);
       ProductionRule(std::string string_repr);
+      ~ProductionRule();
 
       void ParseString(std::string string_repr);
 

@@ -27,6 +27,10 @@ automata::grammar::ProductionRule::ProductionRule(std::string string_repr) {
   ParseString(string_repr);
 }
 
+automata::grammar::ProductionRule::~ProductionRule(){
+
+}
+
 void automata::grammar::ProductionRule::ParseString(std::string string_repr) {
   std::string input, output;
   std::size_t position = string_repr.find("->");
